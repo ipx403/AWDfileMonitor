@@ -1,0 +1,45 @@
+import os
+import time
+'''
+先输入该脚本之前运行的次数，没运行过输入1，运行过随便输入，防止程序崩溃
+第一次运行会生成原始网站下文件路径 的保存文件
+每2秒监控一遍网站目录，将文件和路径与文件中的字符串比较
+'''
+# /var/www/html/pikachu
+def fristGo(webPath, logName):
+    if os.path.exists("./movFiles"):
+        pass
+    else:
+        os.mkdir("movFiles")  # mkdir webshell files
+    for root, dirs, files in os.walk(webPath):
+        for file in files:
+            # 获取文件所属目录
+            # print(root)
+            # 获取文件路径
+            filePath = os.path.join(root, file)
+            print(filePath)
+            with open(logName, "at") as f:
+                f.write(filePath + "\n")
+
+if __name__ == '__main__':
+    logName = "AW0W38.log"
+    movFilesDir = "./movFiles"
+    runNum = input("please input this script run number : ")
+    webPath = input("please input web path (/var/www/html/test) : ")
+    if runNum == "1":
+        fristGo(webPath, logName)
+    else:
+        pass
+    f = open(logName, "r+")
+    files = f.readlines()
+    while 1:
+        for r, d, fsNow in os.walk(webPath):   # now read web path file
+            for fNow in fsNow:
+                fNowPath = os.path.join(r, fNow)
+                if fNowPath + "\n" in files:
+                    pass
+                else:
+                    os.system("mv "+fNowPath+" "+movFilesDir)
+                    print(fNowPath + "  is NEW FILES,move this file to " + movFilesDir)
+        time.sleep(2)
+    f.close()
